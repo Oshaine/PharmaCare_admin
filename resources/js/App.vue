@@ -3,6 +3,7 @@
     <main data-app>
       <router-view></router-view>
       <FlashMessage position="right top"></FlashMessage>
+      <!-- Scroll to Top Button-->
     </main>
   </v-app>
 </template>

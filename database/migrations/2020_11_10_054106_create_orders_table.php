@@ -17,11 +17,11 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('order_number');
-            $table->enum('status', ['pending', 'processing', 'completed', 'decline'])->default('pending');
+            $table->enum('status', ['Pending', 'Not Available', 'Processing', 'Completed', 'Decline', 'Ready for Pickup'])->default('Pending');
             $table->double('grand_total');
             $table->integer('item_count');
             $table->boolean('is_paid')->default(false);
-            $table->enum('payment_method', ['cash_on_pickup', 'paypal', 'card'])->default('cash_on_pickup');
+            $table->enum('payment_method', ['Cash On Pickup', 'PayPal', 'Card'])->default('Cash On Pickup');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

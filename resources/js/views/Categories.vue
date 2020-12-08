@@ -1,10 +1,12 @@
 <template>
   <div id="content" class="p-5">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-      <h1 class="h3 mb-0 text-gray-800">Categories</h1>
+      <!-- <h1 class="h3 mb-0 text-gray-800">Categories</h1> -->
     </div>
     <v-card>
       <v-card-title>
+        Categories
+        <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -34,67 +36,73 @@
                 </v-btn>
               </template>
               <v-card>
-                <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
+                <form @submit.prevent="save">
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
 
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12">
-                        <v-text-field
-                          label="Category Name"
-                          v-model="editedItem.name"
-                          rounded
-                          outlined
-                        ></v-text-field>
-                        <div class="invalid-feedback" v-if="errors.type">
-                          {{ errors.name[0] }}
-                        </div>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          label="Description"
-                          v-model="editedItem.description"
-                          rounded
-                          outlined
-                        ></v-text-field>
-                        <div class="invalid-feedback" v-if="errors.type">
-                          {{ errors.description[0] }}
-                        </div>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-dialog
-                          ref="dialog"
-                          v-model="modal"
-                          :return-value.sync="date"
-                          persistent
-                          width="290px"
-                        >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="modal = false">
-                            Cancel
-                          </v-btn>
-                          <v-btn
-                            text
-                            color="primary"
-                            @click="$refs.dialog.save(date)"
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                            label="Category Name"
+                            v-model="editedItem.name"
+                            rounded
+                            outlined
+                            required
+                          ></v-text-field>
+                          <div class="invalid-feedback" v-if="errors.type">
+                            {{ errors.name[0] }}
+                          </div>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            label="Description"
+                            v-model="editedItem.description"
+                            rounded
+                            outlined
+                            required
+                          ></v-text-field>
+                          <div class="invalid-feedback" v-if="errors.type">
+                            {{ errors.description[0] }}
+                          </div>
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                          <v-dialog
+                            ref="dialog"
+                            v-model="modal"
+                            :return-value.sync="date"
+                            persistent
+                            width="290px"
                           >
-                            OK
-                          </v-btn>
-                        </v-dialog>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
+                            <v-spacer></v-spacer>
+                            <v-btn text color="primary" @click="modal = false">
+                              Cancel
+                            </v-btn>
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="$refs.dialog.save(date)"
+                            >
+                              OK
+                            </v-btn>
+                          </v-dialog>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">
-                    Cancel
-                  </v-btn>
-                  <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
-                </v-card-actions>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="close">
+                      Cancel
+                    </v-btn>
+                    <v-btn color="blue darken-1" text type="submit">
+                      Save
+                    </v-btn>
+                  </v-card-actions>
+                </form>
               </v-card>
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="800px">
@@ -142,7 +150,7 @@ export default {
       {
         text: "Category Name",
         align: "start",
-        sortable: false,
+        sortable: true,
         value: "name",
       },
       { text: "Description", value: "description" },
@@ -150,7 +158,6 @@ export default {
     ],
     editedIndex: -1,
     date: new Date().toISOString().substr(0, 7),
-    menu: false,
     modal: false,
     categories: [],
     editedItem: {
@@ -170,10 +177,6 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Category" : "Edit Category";
-    },
-
-    isPaid() {
-      return this.editedItem.is_paid == 1 ? "Paid" : "Not Paid";
     },
   },
 
@@ -245,15 +248,18 @@ export default {
 
     save: async function () {
       try {
-        var data = {
-          id: this.editedItem.id,
-          name: this.editedItem.name,
-          description: this.editedItem.description,
-        };
+        let formData = new FormData();
+
+        formData.append("id", this.editedItem.id);
+        formData.append("name", this.editedItem.name);
+        formData.append("description", this.editedItem.description);
+
         if (this.editedIndex > -1) {
+          formData.append("_method", "PUT");
+
           const response = await categoryService.updateCategory(
             this.editedItem.id,
-            data
+            formData
           );
 
           Object.assign(this.categories[this.editedIndex], this.editedItem);
@@ -263,8 +269,9 @@ export default {
             time: 5000,
             icon: "/assets/icons/checked.svg",
           });
+          this.close();
         } else {
-          const response = await categoryService.createCategory(data);
+          const response = await categoryService.createCategory(formData);
           this.categories.push(this.editedItem);
           this.flashMessage.success({
             title: "Success",
@@ -272,6 +279,7 @@ export default {
             time: 5000,
             icon: "/assets/icons/checked.svg",
           });
+          this.close();
         }
       } catch (error) {
         this.flashMessage.error({
@@ -280,7 +288,6 @@ export default {
           icon: "assets/icons/warning.svg",
         });
       }
-      this.close();
     },
     loadCategories: async function () {
       try {

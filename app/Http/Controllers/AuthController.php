@@ -109,4 +109,51 @@ class AuthController extends Controller
             'status_code' => 500
         ], 500);
     }
+
+    public function getUsers()
+    {
+        return response()->json(User::all(), 200);
+    }
+
+
+    public function updateUser(Request $request, User $user)
+    {
+
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|string|email',
+            'address' => 'required',
+            'role' => 'required',
+        ]);
+
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->phone_number = $request->phone_number;
+        $user->email = $request->email;
+        $user->address = $request->address;
+        $user->role = $request->role;
+        // $oldPath = $user->image;
+        // if ($request->hasFile('image')) {
+        //     $request->validate([
+        //         'image' => 'image|mimes:jpeg,png,jpg'
+
+        //     ]);
+        //     $path = $request->file('image')->store('categoroy_imagies');
+        //     $user->image = $path;
+        //     Storage::delete($oldPath);
+        // }
+
+        if ($user->save()) {
+            return response()->json($user, 200);
+        } else {
+            // Storage::delete($path);
+
+            return response()->json([
+                'message' => 'Some Error Occurred, Please Try Again!',
+                'status_code' => 500
+            ], 500);
+        }
+    }
 }

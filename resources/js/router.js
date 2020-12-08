@@ -38,11 +38,6 @@ const routes = [
                 component: () => import('./views/Users.vue')
             },
             {
-                path: 'prescriptions',
-                name: 'prescriptions',
-                component: () => import('./views/Prescriptions.vue')
-            },
-            {
                 path: 'over-counter-orders',
                 name: 'over-counter-orders',
                 component: () => import('./views/OverCounterOrders.vue')

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Medication extends Model
 {
     //
-    protected $fillable = ['name', 'brand', 'type', 'dosage', 'route', 'strength', 'units', 'price_per_unit', 'isFavourite', 'isPopular', 'image'];
+    protected $fillable = ['name', 'brand', 'type', 'dosage', 'route', 'strength', 'units', 'price_per_unit', 'is_featured', 'image'];
 
     public function category()
     {

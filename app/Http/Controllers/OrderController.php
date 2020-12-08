@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Medication;
 use App\Order;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class OrderController extends Controller
     public function index()
     {
         //
-        $orders = Order::with('items', 'user')->get();
+        $orders = Order::with('items', 'user')->orderByDesc('id')->get();
         return response()->json($orders, 200);
     }
 
@@ -28,6 +29,9 @@ class OrderController extends Controller
     {
         //
     }
+
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -44,7 +48,7 @@ class OrderController extends Controller
 
         $order = new Order();
         $order->user_id = $request->user_id;
-        $order->order_number = uniqid('OrderNumber-'); //unique order number
+        $order->order_number = uniqid('Order-'); //unique order number
         $order->item_count = $request->item_count;
         $order->grand_total = $request->grand_total;
         $order->payment_method = $request->payment_method;
@@ -97,7 +101,6 @@ class OrderController extends Controller
         ]);
 
         $order->user_id = $request->user_id;
-        // $order->order_number = uniqid('OrderNumber-'); //unique order number
         $order->item_count = $request->item_count;
         $order->grand_total = $request->grand_total;
         $order->payment_method = $request->payment_method;
@@ -105,9 +108,14 @@ class OrderController extends Controller
         $order->is_paid = $request->is_paid;
         $cartItems = $request->cart;
         if ($order->save()) {
-            // foreach ($cartItems as $items) {
-            //     $order->items()->attach($order, ['medication_id' => $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['item_count']]);
-            // }
+            $orders = Order::find($order->id);
+            $temp = $orders->items()->get();
+            foreach ($temp as $items) {
+                //delete update stock amount if item sold
+                if ($order->status == 'Completed') {
+                    $medications =   Medication::where('id', $items['pivot']->medication_id)->decrement('units', $items['pivot']->quantity);
+                }
+            }
             return response()->json(['message' => 'Order Updated', 'status_code' => 200], 200);
         } else {
             return response()->json(['message' => 'Some Error Occured'], 500);
@@ -133,5 +141,11 @@ class OrderController extends Controller
                 'status' => 500
             ], 500);
         }
+    }
+
+    public function userOrders(Request $request)
+    {
+        $orders = Order::with('items', 'user')->where('user_id', $request->id)->orderByDesc('id')->get();
+        return response()->json($orders, 200);
     }
 }

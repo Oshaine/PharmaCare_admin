@@ -5,7 +5,7 @@ export function createCategory(data) {
     return http().post('/categories', data);
 
 }
-//reade category
+//read category
 export function loadCategories() {
     return http().get('/categories');
 }

@@ -76,6 +76,7 @@ class MedicationController extends Controller
         $medication->units = $request->units;
         $medication->price_per_unit = $request->price_per_unit;
         $medication->category_id = $request->category_id;
+        $medication->is_featured = $request->is_featured ? true : false;
         $path = $request->file('image')->store('medication_imagies');
         $medication->image = $path;
 
@@ -140,6 +141,7 @@ class MedicationController extends Controller
         $medication->usage = $request->usage;
         $medication->units = $request->units;
         $medication->price_per_unit = $request->price_per_unit;
+        $medication->is_featured = $request->is_featured ? true : false;
         $medication->category_id = $request->category_id;
 
         $oldPath = $medication->image;
@@ -185,5 +187,16 @@ class MedicationController extends Controller
                 'status' => 500
             ], 500);
         }
+    }
+
+    public function medicationWithCategories(Request $request)
+    {
+        $medications = Medication::where('category_id', $request->id)->get();
+        return response()->json($medications, 200);
+    }
+
+    public function featuredMedication()
+    {
+        return response()->json(['data' => Medication::where('is_featured', true)->get(), 'status' => 200], 200);
     }
 }

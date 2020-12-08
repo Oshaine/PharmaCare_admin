@@ -6,8 +6,8 @@ export function createMedication(data) {
 
 }
 //read medication
-export function loadMedication(page = 1) {
-    return http().get('/medications?page=' + page);
+export function loadMedication() {
+    return http().get('/medications');
 }
 
 

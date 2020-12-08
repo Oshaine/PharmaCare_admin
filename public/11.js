@@ -161,11 +161,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
   created: function created() {
-    document.querySelector("body").style.backgroundColor = "#36b9cc";
+    document.querySelector("#app").style.backgroundColor = "#36b9cc";
   },
   data: function data() {
     return {
@@ -262,7 +263,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "container" }, [
-      _c("h2", { staticClass: "parmacare-title" }, [_vm._v("PharmaCare")]),
+      _c("h2", { staticClass: "parmacare-title p-5" }, [_vm._v("PharmaCare")]),
       _vm._v(" "),
       _c("div", { staticClass: "card o-hidden border-0 shadow-lg my-5" }, [
         _c("div", { staticClass: "card-body p-0" }, [
@@ -590,15 +591,12 @@ var render = function() {
                           "\n                  Register Account\n                "
                         )
                       ]
-                    ),
-                    _vm._v(" "),
-                    _c("hr"),
-                    _vm._v(" "),
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _vm._m(2)
+                    )
                   ]
                 ),
+                _vm._v(" "),
+                _c("br"),
+                _c("br"),
                 _vm._v(" "),
                 _c("hr"),
                 _vm._v(" "),
@@ -651,38 +649,6 @@ var staticRenderFns = [
         _vm._v("Create an Account!")
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-google btn-user btn-block",
-        attrs: { href: "#" }
-      },
-      [
-        _c("i", { staticClass: "fab fa-google" }),
-        _vm._v("\n                  Register with Google\n                ")
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn btn-facebook btn-user btn-block",
-        attrs: { href: "#" }
-      },
-      [
-        _c("i", { staticClass: "fab fa-facebook-f" }),
-        _vm._v(" Register with Facebook\n                ")
-      ]
-    )
   }
 ]
 render._withStripped = true

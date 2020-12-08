@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <h2 class="parmacare-title">PharmaCare</h2>
+      <h2 class="parmacare-title p-5">PharmaCare</h2>
       <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-body p-0">
           <!-- Nested Row within Card Body -->
@@ -112,15 +112,16 @@
                   >
                     Register Account
                   </button>
-                  <hr />
+                  <!-- <hr />
                   <a href="#" class="btn btn-google btn-user btn-block">
                     <i class="fab fa-google"></i>
                     Register with Google
                   </a>
                   <a href="#" class="btn btn-facebook btn-user btn-block">
                     <i class="fab fa-facebook-f"></i> Register with Facebook
-                  </a>
+                  </a> -->
                 </form>
+                <br /><br />
                 <hr />
                 <div class="text-center">
                   <router-link class="small" to="/forgot-password"
@@ -146,7 +147,7 @@ import * as auth from "../../services/auth_service";
 export default {
   name: "Register",
   created() {
-    document.querySelector("body").style.backgroundColor = "#36b9cc";
+    document.querySelector("#app").style.backgroundColor = "#36b9cc";
   },
   data() {
     return {

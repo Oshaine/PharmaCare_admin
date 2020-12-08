@@ -61,8 +61,8 @@
                         <v-select
                           rounded
                           outlined
-                          readonly
-                          :items="['cash_on_delivery', 'paypal', 'card']"
+                          disabled
+                          :items="['Cash On Pickup', 'PayPal', 'Card']"
                           v-model="editedItem.payment_method"
                           prepend-inner-icon="mdi-cash-multiple"
                           label="Payment Method"
@@ -72,6 +72,7 @@
                       <v-col>
                         <v-switch
                           v-model="editedItem.is_paid"
+                          :disabled="editedItem.status == 'Completed'"
                           inset
                           :label="editedItem.is_paid ? 'Paid' : 'Not Paid'"
                         ></v-switch>
@@ -80,12 +81,15 @@
                         <v-select
                           rounded
                           outlined
+                          :disabled="editedItem.status == 'Completed'"
                           prepend-inner-icon="mdi-clock-fast"
                           :items="[
-                            'pending',
-                            'processing',
-                            'completed',
-                            'decline',
+                            'Pending',
+                            'Not Available',
+                            'Processing',
+                            'Completed',
+                            'Decline',
+                            'Ready for Pickup',
                           ]"
                           v-model="editedItem.status"
                           label="Status"
@@ -165,7 +169,7 @@
                               disabled
                               rounded
                               outlined
-                              v-model="
+                              :v-model="
                                 new Date(editedItem.created_at).toLocaleString()
                               "
                               label="Order Date"
@@ -198,7 +202,14 @@
                   <v-btn color="blue darken-1" text @click="close">
                     Close
                   </v-btn>
-                  <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="save"
+                    :disabled="is_Completed == true"
+                  >
+                    Save
+                  </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -280,6 +291,7 @@ export default {
     search: "",
     dialog: false,
     dialogDelete: false,
+    is_Completed: false,
     headers: [
       {
         text: "Order Number",
@@ -293,8 +305,8 @@ export default {
 
       { text: "Status", value: "status" },
       { text: "Medication", value: "medication_name" },
-      { text: "Quantity", value: "quantity" },
       { text: "Price", value: "price_per_unit" },
+      { text: "Quantity", value: "quantity" },
       { text: "Grand Total", value: "grand_total" },
       { text: "isPaid", value: "is_paid" },
       { text: "Payment Method", value: "payment_method" },
@@ -402,11 +414,7 @@ export default {
         this.orders.splice(this.editedIndex, 1);
         this.flashMessage.success({
           title: "Success",
-          message:
-            this.editedItem.user.first_name +
-            " " +
-            this.editedItem.user.last_name +
-            " Order Deleted",
+          message: this.editedItem.order_number + " Deleted",
           time: 5000,
           icon: "/assets/icons/checked.svg",
         });
@@ -457,11 +465,7 @@ export default {
           Object.assign(this.orders[this.editedIndex], this.editedItem);
           this.flashMessage.success({
             title: "Success",
-            message:
-              this.editedItem.user.first_name +
-              " " +
-              this.editedItem.user.last_name +
-              " Order Updated",
+            message: this.editedItem.order_number + " Updated",
             time: 5000,
             icon: "/assets/icons/checked.svg",
           });
@@ -481,6 +485,10 @@ export default {
       try {
         const response = await orderService.getOrders();
         this.orders = response.data;
+
+        if (this.editedItem.status == "Completed") {
+          this.is_Completed = true;
+        }
       } catch (error) {
         this.flashMessage.error({
           title: "Error",

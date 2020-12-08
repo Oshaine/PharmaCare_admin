@@ -19,7 +19,6 @@ class CreateOrderItemsTable extends Migration
             $table->unsignedBigInteger('medication_id');
             $table->foreign('medication_id')->references('id')->on('medications')->onDelete('cascade');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-
             $table->double('price_per_unit');
             $table->integer('quantity');
             $table->timestamps();

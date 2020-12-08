@@ -17,7 +17,7 @@ class CreateMedicationsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->string('name');
-            $table->enum('type', array('generic', 'brand', 'both'))->default('generic');
+            $table->enum('type', array('Generic', 'Brand'))->default('Generic');
             $table->string('route');
             $table->string('strength');
             $table->string('usage');
@@ -25,8 +25,7 @@ class CreateMedicationsTable extends Migration
             $table->text('image');
             $table->integer('units');
             $table->double('price_per_unit');
-            $table->boolean('isFavourite')->default(false)->nullable();
-            $table->boolean('isPopular')->default(false)->nullable();
+            $table->boolean('is_featured')->default(false);
             $table->timestamps();
 
             $table->foreign('category_id')

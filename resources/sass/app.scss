@@ -764,7 +764,7 @@ html {
     }
     .sidebar.toggled {
       overflow: visible;
-      width: 6.5rem !important;
+      width: 10rem !important;
     }
     .sidebar.toggled .nav-item .collapse {
       position: absolute;
@@ -1010,6 +1010,10 @@ html {
     color: #d1d3e2;
   }
 
+  .card-body h5{
+      font-size: 14px;
+  }
+
   .card .card-header[data-toggle="collapse"].collapsed {
     border-radius: 0.35rem;
   }
@@ -1020,7 +1024,7 @@ html {
 
   .chart-area {
     position: relative;
-    height: 10rem;
+    height: 25rem !important;
     width: 100%;
   }
 
@@ -1032,25 +1036,25 @@ html {
 
   .chart-bar {
     position: relative;
-    height: 10rem;
+    height: 25rem !important;
     width: 100%;
   }
 
   @media (min-width: 768px) {
     .chart-bar {
-      height: 20rem;
+      height: 25rem !important;
     }
   }
 
   .chart-pie {
     position: relative;
-    height: 15rem;
+    height: 25rem !important;
     width: 100%;
   }
 
   @media (min-width: 768px) {
     .chart-pie {
-      height: calc(20rem - 43px) !important;
+      height: 25rem !important;
     }
   }
 

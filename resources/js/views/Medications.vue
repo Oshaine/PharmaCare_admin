@@ -357,10 +357,17 @@
 <template>
   <div id="content" class="p-5">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-      <h1 class="h3 mb-0 text-gray-800">Medications</h1>
+      <!-- <h1 class="h3 mb-0 text-gray-800">
+        Welcome,
+        {{
+          $store.state.profile.first_name + " " + $store.state.profile.last_name
+        }}
+      </h1> -->
     </div>
     <v-card>
       <v-card-title>
+        Medications
+        <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -422,7 +429,7 @@
                           <v-select
                             rounded
                             outlined
-                            :items="['brand', 'generic']"
+                            :items="['Brand', 'Generic']"
                             item-text="type"
                             v-model="editedItem.type"
                             label="Type"
@@ -485,15 +492,27 @@
                             outlined
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6">
+                        <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             label="Units"
                             v-model="editedItem.units"
+                            type="number"
                             rounded
                             outlined
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="6">
+                        <v-col>
+                          <v-switch
+                            v-model="editedItem.is_featured"
+                            inset
+                            :label="
+                              editedItem.is_featured
+                                ? 'Featured'
+                                : 'Not Featured'
+                            "
+                          ></v-switch>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             label="Price Per Unit"
                             v-model="editedItem.price_per_unit"
@@ -501,13 +520,10 @@
                             outlined
                           ></v-text-field>
                         </v-col>
+
                         <v-col cols="12" sm="6" md="6">
                           <v-file-input
-                            v-model="
-                              editedIndex > -1
-                                ? editedItem.image.name
-                                : editedItem.image
-                            "
+                            v-model="editedItem.image"
                             label="Add Image"
                             @change="attachImage"
                           ></v-file-input>
@@ -516,7 +532,7 @@
                           <v-img
                             :src="
                               editedIndex > -1
-                                ? `${$store.state.serverPath}/storage/${editedItem.image}`
+                                ? `${$store.state.serverPath}/storage/${editedItem.image.name}`
                                 : url
                             "
                             style="width: 200px; margin-left: 80px"
@@ -616,7 +632,7 @@ export default {
       {
         text: "Medication Name",
         align: "start",
-        sortable: false,
+        sortable: true,
         value: "name",
       },
       { text: "Category", value: "category_id" },
@@ -626,6 +642,8 @@ export default {
       { text: "Image", value: "image" },
       { text: "Units", value: "units" },
       { text: "Price Per Unit", value: "price_per_unit" },
+      { text: "Featured", value: "is_featured" },
+
       { text: "Actions", value: "actions", sortable: false },
     ],
     editedIndex: -1,
@@ -644,6 +662,7 @@ export default {
       image: [],
       units: 0,
       price_per_unit: 0.0,
+      is_featured: false,
     },
     defaultItem: {
       id: "",
@@ -658,6 +677,7 @@ export default {
       image: [],
       units: 0,
       price_per_unit: 0.0,
+      is_featured: false,
     },
     url: "",
 
@@ -690,6 +710,7 @@ export default {
     initialize() {
       this.loadMedication();
       this.loadCategories();
+      console.log(this.editedItem.is_featured);
     },
 
     remove(item) {
@@ -761,6 +782,10 @@ export default {
         formData.append("dosage", this.editedItem.dosage);
         formData.append("units", this.editedItem.units);
         formData.append("price_per_unit", this.editedItem.price_per_unit);
+        formData.append(
+          "is_featured",
+          JSON.stringify(this.editedItem.is_featured)
+        );
         formData.append("image", this.editedItem.image);
         if (this.editedIndex > -1) {
           formData.append("_method", "PUT");
@@ -836,11 +861,11 @@ export default {
     attachImage(e) {
       if (e) {
         this.url = URL.createObjectURL(this.editedItem.image);
-
+        console.log(this.url);
         if (this.editedIndex > -1) {
           //edit
           this.$refs.editMedicationImage = URL.createObjectURL(
-            this.editedItem.image
+            this.editedItem.image.name
           );
         } else {
           //create

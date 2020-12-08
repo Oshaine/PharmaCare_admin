@@ -23,7 +23,7 @@
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
         <router-link to="/" class="nav-link" exact>
-          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <i class="fas fa-fw fa-chart-area"></i>
           <span>Dashboard</span>
         </router-link>
       </li>
@@ -70,13 +70,13 @@
           </div>
         </div>
       </li>
-
+      <!--
       <li class="nav-item">
         <router-link to="/prescriptions" class="nav-link" exact>
           <i class="fas fa-file-prescription"></i>
           <span>Prescriptions</span>
         </router-link>
-      </li>
+      </li> -->
 
       <!-- Divider -->
       <hr class="sidebar-divider" />
@@ -117,7 +117,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Orders</h6>
             <router-link to="/prescription-orders" class="collapse-item" exact>
-              <i class="fas fa-prescription-bottle-alt"></i>
+              <i class="fas fa-file-prescription"></i>
               <span>Prescription Orders</span>
             </router-link>
 
@@ -127,17 +127,6 @@
             </router-link>
           </div>
         </div>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider" />
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Reports</span>
-        </a>
       </li>
 
       <!-- Divider -->
@@ -151,3 +140,4 @@
     <!-- End of Sidebar -->
   </div>
 </template>
+

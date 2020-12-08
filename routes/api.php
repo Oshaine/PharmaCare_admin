@@ -25,6 +25,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('profile', 'AuthController@profile');
+        Route::get('/get-users', 'AuthController@getUsers');
+        Route::put('/update-users/{user}', 'AuthController@updateUser');
     });
 });
 
@@ -39,10 +41,31 @@ Route::group(['middleware' => 'auth:api'], function () {
     //admin scope route
     Route::group(['middleware' => 'scope:administrator'], function () {
         Route::get('get-categories', 'MedicationController@categories');
+        Route::get('/all-users', 'PrescriptionController@users');
+
+
         // Route::resource('medications', 'MedicationController');
     });
 });
+//Reports
+Route::get('/card-report', 'ReportsController@cardReport');
+Route::get('/monthly-earnings', 'ReportsController@monthlyEarning');
+Route::get('/category-revenue', 'ReportsController@categoryRevenue');
+Route::get('/user-registrations', 'ReportsController@monthlyRegistrations');
+
+
+
 
 Route::Resource('/categories', 'CategoryController');
 Route::resource('medications', 'MedicationController');
+Route::get('featured-medications', 'MedicationController@featuredMedication');
+
+Route::post('medication-categories/{id}', 'MedicationController@medicationWithCategories');
 Route::resource('orders', 'OrderController');
+Route::post('user-orders', 'OrderController@userOrders');
+
+//prescription
+Route::resource('/prescriptions', 'PrescriptionController');
+Route::put('/user-update-prescription/{prescription}', 'PrescriptionController@userUpdatePrescription');
+Route::post('/user-prescriptions', 'PrescriptionController@userPrescriptions');
+Route::get('/prescribed-medications', 'PrescriptionController@medications');
