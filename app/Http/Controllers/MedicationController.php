@@ -138,7 +138,7 @@ class MedicationController extends Controller
         $medication->dosage = $request->dosage;
         $medication->route = $request->route;
         $medication->strength = $request->strength;
-        $medication->usage = $request->usage;
+        $medication->usage = json_encode(explode(',',  $request->usage));
         $medication->units = $request->units;
         $medication->price_per_unit = $request->price_per_unit;
         $medication->is_featured = $request->is_featured == 'true' ? true : false;

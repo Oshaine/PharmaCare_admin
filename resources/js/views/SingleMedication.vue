@@ -24,7 +24,7 @@
 
           <hr />
           <h3>Usage</h3>
-          <p>{{ medication.usage }}</p>
+          <p v-for="(item, index) in getUsage()" :key="index.id">{{ item }}</p>
           <h3>Route</h3>
           <p>{{ medication.route }}</p>
           <router-link :to="{ name: 'medications' }" class="button">
@@ -60,6 +60,10 @@ export default {
           message: "An Error Occured",
         });
       }
+    },
+
+    getUsage() {
+      return JSON.parse(this.medication.usage);
     },
 
     loadCategories: async function () {

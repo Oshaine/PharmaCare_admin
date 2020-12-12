@@ -451,14 +451,6 @@
                           ></v-select>
                         </v-col>
                         <v-col cols="12">
-                          <v-text-field
-                            label="Dosage"
-                            v-model="editedItem.dosage"
-                            rounded
-                            outlined
-                          ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="6">
                           <v-combobox
                             v-model="editedItem.usage"
                             :items="editedItem.usage"
@@ -490,6 +482,15 @@
                             </template>
                           </v-combobox>
                         </v-col>
+                        <v-col cols="12" sm="6" md="6">
+                          <v-text-field
+                            label="Dosage"
+                            v-model="editedItem.dosage"
+                            rounded
+                            outlined
+                          ></v-text-field>
+                        </v-col>
+
                         <v-col cols="12" sm="6" md="6">
                           <v-text-field
                             label="Strength"
@@ -725,7 +726,6 @@ export default {
     initialize() {
       this.loadMedication();
       this.loadCategories();
-      console.log(this.editedItem.is_featured);
     },
 
     remove(item) {
@@ -736,6 +736,8 @@ export default {
       this.editedIndex = this.medications.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      this.editedItem.usage = JSON.parse(this.editedItem.usage);
+      //   JSON.parse(this.editedItem.usage);
     },
 
     deleteItem(item) {
@@ -806,12 +808,18 @@ export default {
           JSON.stringify(this.editedItem.is_featured)
         );
         formData.append("image", this.editedItem.image);
+
+        formData.forEach((v) => {
+          console.log(v);
+        });
+
         if (this.editedIndex > -1) {
           formData.append("_method", "PUT");
           const response = await medicationService.updateMedication(
             this.editedItem.id,
             formData
           );
+
           Object.assign(this.medications[this.editedIndex], this.editedItem);
           this.flashMessage.success({
             title: "Success",

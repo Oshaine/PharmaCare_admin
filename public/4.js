@@ -669,6 +669,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -766,7 +767,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     initialize: function initialize() {
       this.loadMedication();
       this.loadCategories();
-      console.log(this.editedItem.is_featured);
     },
     remove: function remove(item) {
       this.editedItem.usage.splice(this.editedItem.usage.indexOf(item), 1);
@@ -776,6 +776,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.editedIndex = this.medications.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      this.editedItem.usage = JSON.parse(this.editedItem.usage); //   JSON.parse(this.editedItem.usage);
     },
     deleteItem: function deleteItem(item) {
       this.editedIndex = this.medications.indexOf(item);
@@ -875,17 +876,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 formData.append("price_per_unit", this.editedItem.price_per_unit);
                 formData.append("is_featured", JSON.stringify(this.editedItem.is_featured));
                 formData.append("image", this.editedItem.image);
+                formData.forEach(function (v) {
+                  console.log(v);
+                });
 
                 if (!(this.editedIndex > -1)) {
-                  _context2.next = 24;
+                  _context2.next = 25;
                   break;
                 }
 
                 formData.append("_method", "PUT");
-                _context2.next = 18;
+                _context2.next = 19;
                 return _services_medication_service__WEBPACK_IMPORTED_MODULE_1__["updateMedication"](this.editedItem.id, formData);
 
-              case 18:
+              case 19:
                 response = _context2.sent;
                 Object.assign(this.medications[this.editedIndex], this.editedItem);
                 this.flashMessage.success({
@@ -895,14 +899,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   icon: "/assets/icons/checked.svg"
                 });
                 this.close();
-                _context2.next = 31;
+                _context2.next = 32;
                 break;
 
-              case 24:
-                _context2.next = 26;
+              case 25:
+                _context2.next = 27;
                 return _services_medication_service__WEBPACK_IMPORTED_MODULE_1__["createMedication"](formData);
 
-              case 26:
+              case 27:
                 _response = _context2.sent;
                 this.medications.push(this.editedItem);
                 this.flashMessage.success({
@@ -914,12 +918,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 this.close();
                 this.is_loading = false;
 
-              case 31:
-                _context2.next = 36;
+              case 32:
+                _context2.next = 37;
                 break;
 
-              case 33:
-                _context2.prev = 33;
+              case 34:
+                _context2.prev = 34;
                 _context2.t0 = _context2["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
@@ -927,12 +931,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   icon: "assets/icons/warning.svg"
                 });
 
-              case 36:
+              case 37:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[1, 33]]);
+        }, _callee2, this, [[1, 34]]);
       }));
 
       function save() {
@@ -1382,42 +1386,6 @@ var render = function() {
                                                   "v-col",
                                                   { attrs: { cols: "12" } },
                                                   [
-                                                    _c("v-text-field", {
-                                                      attrs: {
-                                                        label: "Dosage",
-                                                        rounded: "",
-                                                        outlined: ""
-                                                      },
-                                                      model: {
-                                                        value:
-                                                          _vm.editedItem.dosage,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            _vm.editedItem,
-                                                            "dosage",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "editedItem.dosage"
-                                                      }
-                                                    })
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "v-col",
-                                                  {
-                                                    attrs: {
-                                                      cols: "12",
-                                                      sm: "6",
-                                                      md: "6"
-                                                    }
-                                                  },
-                                                  [
                                                     _c("v-combobox", {
                                                       attrs: {
                                                         items:
@@ -1494,6 +1462,42 @@ var render = function() {
                                                         },
                                                         expression:
                                                           "editedItem.usage"
+                                                      }
+                                                    })
+                                                  ],
+                                                  1
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "v-col",
+                                                  {
+                                                    attrs: {
+                                                      cols: "12",
+                                                      sm: "6",
+                                                      md: "6"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("v-text-field", {
+                                                      attrs: {
+                                                        label: "Dosage",
+                                                        rounded: "",
+                                                        outlined: ""
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          _vm.editedItem.dosage,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            _vm.editedItem,
+                                                            "dosage",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "editedItem.dosage"
                                                       }
                                                     })
                                                   ],

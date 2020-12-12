@@ -106,6 +106,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return showMedication;
     }(),
+    getUsage: function getUsage() {
+      return JSON.parse(this.medication.usage);
+    },
     loadCategories: function () {
       var _loadCategories = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var response;
@@ -271,7 +274,9 @@ var render = function() {
             _vm._v(" "),
             _c("h3", [_vm._v("Usage")]),
             _vm._v(" "),
-            _c("p", [_vm._v(_vm._s(_vm.medication.usage))]),
+            _vm._l(_vm.getUsage(), function(item, index) {
+              return _c("p", { key: index.id }, [_vm._v(_vm._s(item))])
+            }),
             _vm._v(" "),
             _c("h3", [_vm._v("Route")]),
             _vm._v(" "),
@@ -283,7 +288,7 @@ var render = function() {
               [_vm._v("\n          Back")]
             )
           ],
-          1
+          2
         )
       ])
     ])
