@@ -655,6 +655,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -663,6 +677,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _editedItem, _defaultItem;
 
     return {
+      is_loading: false,
       search: "",
       dialog: false,
       dialogDelete: false,
@@ -775,11 +790,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                this.is_loading = true;
+                _context.prev = 1;
+                _context.next = 4;
                 return _services_medication_service__WEBPACK_IMPORTED_MODULE_1__["deleteMedication"](this.editedItem.id);
 
-              case 3:
+              case 4:
                 response = _context.sent;
                 this.medications.splice(this.editedIndex, 1);
                 this.flashMessage.success({
@@ -788,27 +804,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   time: 5000,
                   icon: "/assets/icons/checked.svg"
                 });
-                _context.next = 11;
+                _context.next = 12;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](0);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
                   icon: "assets/icons/warning.svg"
                 });
 
-              case 11:
-                this.closeDelete();
-
               case 12:
+                this.closeDelete();
+                this.is_loading = false;
+
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[1, 9]]);
       }));
 
       function deleteItemConfirm() {
@@ -843,7 +860,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
+                this.is_loading = true;
+                _context2.prev = 1;
                 //   var usageArray = Array.from(this.)
                 formData = new FormData();
                 formData.append("name", this.editedItem.name);
@@ -859,15 +877,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 formData.append("image", this.editedItem.image);
 
                 if (!(this.editedIndex > -1)) {
-                  _context2.next = 23;
+                  _context2.next = 24;
                   break;
                 }
 
                 formData.append("_method", "PUT");
-                _context2.next = 17;
+                _context2.next = 18;
                 return _services_medication_service__WEBPACK_IMPORTED_MODULE_1__["updateMedication"](this.editedItem.id, formData);
 
-              case 17:
+              case 18:
                 response = _context2.sent;
                 Object.assign(this.medications[this.editedIndex], this.editedItem);
                 this.flashMessage.success({
@@ -877,14 +895,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   icon: "/assets/icons/checked.svg"
                 });
                 this.close();
-                _context2.next = 29;
+                _context2.next = 31;
                 break;
 
-              case 23:
-                _context2.next = 25;
+              case 24:
+                _context2.next = 26;
                 return _services_medication_service__WEBPACK_IMPORTED_MODULE_1__["createMedication"](formData);
 
-              case 25:
+              case 26:
                 _response = _context2.sent;
                 this.medications.push(this.editedItem);
                 this.flashMessage.success({
@@ -894,26 +912,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   icon: "/assets/icons/checked.svg"
                 });
                 this.close();
-
-              case 29:
-                _context2.next = 34;
-                break;
+                this.is_loading = false;
 
               case 31:
-                _context2.prev = 31;
-                _context2.t0 = _context2["catch"](0);
+                _context2.next = 36;
+                break;
+
+              case 33:
+                _context2.prev = 33;
+                _context2.t0 = _context2["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
                   icon: "assets/icons/warning.svg"
                 });
 
-              case 34:
+              case 36:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 31]]);
+        }, _callee2, this, [[1, 33]]);
       }));
 
       function save() {
@@ -1155,6 +1174,29 @@ var render = function() {
                             [
                               _vm._v(" "),
                               _c("v-card", [
+                                _c(
+                                  "div",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: _vm.is_loading,
+                                        expression: "is_loading"
+                                      }
+                                    ]
+                                  },
+                                  [
+                                    _c("v-progress-linear", {
+                                      attrs: {
+                                        indeterminate: "",
+                                        color: "cyan"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
                                 _c(
                                   "form",
                                   {
@@ -1745,6 +1787,29 @@ var render = function() {
                                 "v-card",
                                 [
                                   _c(
+                                    "div",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.is_loading,
+                                          expression: "is_loading"
+                                        }
+                                      ]
+                                    },
+                                    [
+                                      _c("v-progress-linear", {
+                                        attrs: {
+                                          indeterminate: "",
+                                          color: "cyan"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
                                     "v-card-title",
                                     { staticClass: "headline" },
                                     [
@@ -1835,6 +1900,25 @@ var render = function() {
                       _c("tr", [
                         _c("td", [
                           _vm._v(_vm._s(_vm.getCategory(item.category_id)))
+                        ])
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "item.is_featured",
+                  fn: function(ref) {
+                    var item = ref.item
+                    return [
+                      _c("tr", [
+                        _c("td", [
+                          _vm._v(
+                            "\n            " +
+                              _vm._s(
+                                item.is_featured ? "Featured" : "Not Featured"
+                              ) +
+                              "\n          "
+                          )
                         ])
                       ])
                     ]
@@ -1975,10 +2059,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuetify/lib/components/VFileInput */ "./node_modules/vuetify/lib/components/VFileInput/index.js");
 /* harmony import */ var vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuetify/lib/components/VIcon */ "./node_modules/vuetify/lib/components/VIcon/index.js");
 /* harmony import */ var vuetify_lib_components_VImg__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vuetify/lib/components/VImg */ "./node_modules/vuetify/lib/components/VImg/index.js");
-/* harmony import */ var vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vuetify/lib/components/VSelect */ "./node_modules/vuetify/lib/components/VSelect/index.js");
-/* harmony import */ var vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vuetify/lib/components/VSwitch */ "./node_modules/vuetify/lib/components/VSwitch/index.js");
-/* harmony import */ var vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vuetify/lib/components/VTextField */ "./node_modules/vuetify/lib/components/VTextField/index.js");
-/* harmony import */ var vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vuetify/lib/components/VToolbar */ "./node_modules/vuetify/lib/components/VToolbar/index.js");
+/* harmony import */ var vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vuetify/lib/components/VProgressLinear */ "./node_modules/vuetify/lib/components/VProgressLinear/index.js");
+/* harmony import */ var vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vuetify/lib/components/VSelect */ "./node_modules/vuetify/lib/components/VSelect/index.js");
+/* harmony import */ var vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vuetify/lib/components/VSwitch */ "./node_modules/vuetify/lib/components/VSwitch/index.js");
+/* harmony import */ var vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vuetify/lib/components/VTextField */ "./node_modules/vuetify/lib/components/VTextField/index.js");
+/* harmony import */ var vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! vuetify/lib/components/VToolbar */ "./node_modules/vuetify/lib/components/VToolbar/index.js");
 
 
 
@@ -2019,7 +2104,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_4__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VChip: vuetify_lib_components_VChip__WEBPACK_IMPORTED_MODULE_6__["VChip"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VCombobox: vuetify_lib_components_VCombobox__WEBPACK_IMPORTED_MODULE_8__["VCombobox"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDataTable: vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_9__["VDataTable"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_10__["VDialog"],VFileInput: vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_11__["VFileInput"],VIcon: vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_12__["VIcon"],VImg: vuetify_lib_components_VImg__WEBPACK_IMPORTED_MODULE_13__["VImg"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"],VSelect: vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_14__["VSelect"],VSpacer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VSpacer"],VSwitch: vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_15__["VSwitch"],VTextField: vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_16__["VTextField"],VToolbar: vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_17__["VToolbar"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_4__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VChip: vuetify_lib_components_VChip__WEBPACK_IMPORTED_MODULE_6__["VChip"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VCombobox: vuetify_lib_components_VCombobox__WEBPACK_IMPORTED_MODULE_8__["VCombobox"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDataTable: vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_9__["VDataTable"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_10__["VDialog"],VFileInput: vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_11__["VFileInput"],VIcon: vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_12__["VIcon"],VImg: vuetify_lib_components_VImg__WEBPACK_IMPORTED_MODULE_13__["VImg"],VProgressLinear: vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_14__["VProgressLinear"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"],VSelect: vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_15__["VSelect"],VSpacer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VSpacer"],VSwitch: vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_16__["VSwitch"],VTextField: vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_17__["VTextField"],VToolbar: vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_18__["VToolbar"]})
 
 
 /* hot reload */

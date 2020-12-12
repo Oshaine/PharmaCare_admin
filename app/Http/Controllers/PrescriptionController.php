@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PrescriptionOrder;
 use App\Medication;
 use App\Prescription;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PrescriptionController extends Controller
@@ -114,7 +116,7 @@ class PrescriptionController extends Controller
         $prescription->grand_total = $request->grand_total;
         $prescription->payment_method = $request->payment_method;
         $prescription->status = $request->status;
-        $prescription->is_paid = $request->is_paid ? true : false;
+        $prescription->is_paid = $request->is_paid  == 'true' ? true : false;
         $oldPath = $prescription->image;
 
 
@@ -130,15 +132,19 @@ class PrescriptionController extends Controller
         if ($prescription->save()) {
             $prescriptions = Prescription::find($prescription->id);
             $temp = $prescriptions->items()->get();
-            // dd($prescriptions);
 
-            if (count($temp) == 0) {
-                $prescription->items()->attach($prescription, ['medication_id' => $request->medication_id, 'price_per_unit' => $request->price_per_unit, 'quantity' => $request->quantity], true);
-            } else {
-                foreach ($temp as $p) {
-                    $prescription->items()->updateExistingPivot($p, ['medication_id' => $request->medication_id, 'price_per_unit' => $request->price_per_unit, 'quantity' => $request->quantity], true);
+            foreach (json_decode($request->items, true) as $items) {
+                if (count($temp) == 0) {
+                    $prescription->items()->attach($prescription, ['medication_id' => $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['quantity']], true);
+                } else {
+                    foreach ($temp as $p) {
+                        dd($p);
+                        $prescription->items()->updateExistingPivot($p, ['medication_id' =>  $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['quantity']], true);
+                    }
                 }
             }
+
+
 
 
             // $prescriptions = Prescription::find($prescription->id);
@@ -146,11 +152,20 @@ class PrescriptionController extends Controller
             foreach ($temp as $items) {
                 //delete update stock amount if item sold
                 if ($prescription->status == 'Completed') {
-                    Medication::where('id', $items['pivot']->medication_id)->decrement('units', $items['pivot']->quantity);
+                    $medications =  Medication::where('id', $items['pivot']->medication_id)->decrement('units', $items['pivot']->quantity);
                 }
             }
+
+            //send user receipt
+            $user = User::find($prescription->user_id);
+            // $medication = Medication::find($)
+            $prescriptionOrder = Prescription::with(['items', 'user'])->find($prescription->id);
+            // dd($prescriptionOrder);
+            Mail::to($user->email)->send(new PrescriptionOrder($prescriptionOrder));
+
+
             return response()->json([
-                'message' => 'Prescription deleted successfully!',
+                'message' => 'Prescription updated successfully!',
                 'status' => 200
             ], 200);
         } else {

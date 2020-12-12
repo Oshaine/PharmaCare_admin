@@ -398,6 +398,12 @@
               </template>
 
               <v-card>
+                <div v-show="is_loading">
+                  <v-progress-linear
+                    indeterminate
+                    color="cyan"
+                  ></v-progress-linear>
+                </div>
                 <form @submit.prevent="save">
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
@@ -561,6 +567,12 @@
             </v-dialog>
             <v-dialog v-model="dialogDelete" max-width="800px">
               <v-card>
+                <div v-show="is_loading">
+                  <v-progress-linear
+                    indeterminate
+                    color="cyan"
+                  ></v-progress-linear>
+                </div>
                 <v-card-title class="headline"
                   >Are you sure you want to delete
                   {{ editedItem.name }}?</v-card-title
@@ -595,11 +607,13 @@
             <td>{{ getCategory(item.category_id) }}</td>
           </tr>
         </template>
-        <!-- <template v-slot:[`item.usage`]="{ item }">
+        <template v-slot:[`item.is_featured`]="{ item }">
           <tr>
-            <td></td>
+            <td>
+              {{ item.is_featured ? "Featured" : "Not Featured" }}
+            </td>
           </tr>
-        </template> -->
+        </template>
 
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="showDetails(item.id)">
@@ -625,6 +639,7 @@ import JsonData from "../../../public/storage/json/med_route.json";
 export default {
   name: "medications",
   data: () => ({
+    is_loading: false,
     search: "",
     dialog: false,
     dialogDelete: false,
@@ -731,6 +746,7 @@ export default {
     },
 
     deleteItemConfirm: async function () {
+      this.is_loading = true;
       try {
         const response = await medicationService.deleteMedication(
           this.editedItem.id
@@ -750,6 +766,7 @@ export default {
         });
       }
       this.closeDelete();
+      this.is_loading = false;
     },
 
     close() {
@@ -769,6 +786,8 @@ export default {
     },
 
     save: async function () {
+      this.is_loading = true;
+
       try {
         //   var usageArray = Array.from(this.)
         let formData = new FormData();
@@ -811,6 +830,7 @@ export default {
             icon: "/assets/icons/checked.svg",
           });
           this.close();
+          this.is_loading = false;
         }
       } catch (error) {
         this.flashMessage.error({

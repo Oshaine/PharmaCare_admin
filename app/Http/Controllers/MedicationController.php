@@ -141,7 +141,7 @@ class MedicationController extends Controller
         $medication->usage = $request->usage;
         $medication->units = $request->units;
         $medication->price_per_unit = $request->price_per_unit;
-        $medication->is_featured = $request->is_featured ? true : false;
+        $medication->is_featured = $request->is_featured == 'true' ? true : false;
         $medication->category_id = $request->category_id;
 
         $oldPath = $medication->image;
@@ -198,5 +198,11 @@ class MedicationController extends Controller
     public function featuredMedication()
     {
         return response()->json(['data' => Medication::where('is_featured', true)->get(), 'status' => 200], 200);
+    }
+
+
+    public function search($query)
+    {
+        return response()->json(['data' => Medication::where('name', "like", '%' . $query . "%")->get()], 200);
     }
 }

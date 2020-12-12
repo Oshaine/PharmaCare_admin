@@ -370,12 +370,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PrescriptionOrders",
   data: function data() {
     return {
+      is_loading: false,
       search: "",
       dialog: false,
       dialogDelete: false,
@@ -429,6 +442,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       modal: false,
       prescription_orders: [],
       medications: [],
+      items: [],
       editedItem: {
         id: "",
         order_number: "",
@@ -444,6 +458,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           medication_id: "",
           name: "",
           price_per_unit: "",
+          quantity: "",
           pivot: {
             medication_id: "",
             price_per_unit: "",
@@ -513,10 +528,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     medication: function medication(e) {
       var _this = this;
 
-      this.editedItem.items = Object.assign(e);
-      console.log(this.editedItem);
-      this.prescription_orders.map(function (v) {// console.log(v);
-      });
+      this.editedItem.items = Object.assign(e); //   console.log(this.editedItem);
+
       var temp = [];
       this.editedItem.items.map(function (value) {
         console.log(value);
@@ -526,8 +539,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
 
         temp.push(value.price_per_unit *= _this.editedItem.quantity);
-      });
-      console.log(temp);
+
+        _this.items.push({
+          medication_id: value.id,
+          price_per_unit: value.price_per_unit,
+          quantity: _this.editedItem.quantity
+        });
+      }); //   console.log(temp);
+
       var sum = temp.reduce(function (a, b) {
         return a + b;
       });
@@ -553,11 +572,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                this.is_loading = true;
+                _context.prev = 1;
+                _context.next = 4;
                 return _services_prescription_service__WEBPACK_IMPORTED_MODULE_1__["deletePrescription"](this.editedItem.id);
 
-              case 3:
+              case 4:
                 response = _context.sent;
                 this.prescription_orders.splice(this.editedIndex, 1);
                 this.flashMessage.success({
@@ -566,27 +586,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   time: 5000,
                   icon: "/assets/icons/checked.svg"
                 });
-                _context.next = 11;
+                _context.next = 12;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](0);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
                   icon: "assets/icons/warning.svg"
                 });
 
-              case 11:
-                this.closeDelete();
-
               case 12:
+                this.closeDelete();
+                this.is_loading = false;
+
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[1, 9]]);
       }));
 
       function deleteItemConfirm() {
@@ -620,7 +641,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
+                this.is_loading = true;
+                _context2.prev = 1;
                 formData = new FormData();
                 formData.append("user_id", this.editedItem.user_id);
                 formData.append("status", this.editedItem.status);
@@ -629,11 +651,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 formData.append("is_paid", JSON.stringify(this.editedItem.is_paid));
                 formData.append("payment_method", this.editedItem.payment_method);
                 formData.append("image", this.editedItem.image);
-                this.editedItem.items.map(function (value) {
-                  formData.append("price_per_unit", value.price_per_unit);
-                  formData.append("medication_id", value.id);
+                formData.append("items", JSON.stringify(this.items));
+                formData.forEach(function (value) {
+                  console.log(value);
                 });
-                formData.append("quantity", this.editedItem.quantity);
 
                 if (!(this.editedIndex > -1)) {
                   _context2.next = 21;
@@ -641,9 +662,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 formData.append("_method", "PUT");
-                formData.forEach(function (s) {
-                  console.log(s);
-                });
                 _context2.next = 16;
                 return _services_prescription_service__WEBPACK_IMPORTED_MODULE_1__["updatePrescription"](this.editedItem.id, formData);
 
@@ -675,7 +693,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 24:
                 _context2.prev = 24;
-                _context2.t0 = _context2["catch"](0);
+                _context2.t0 = _context2["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
@@ -684,13 +702,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 27:
                 this.close();
+                this.is_loading = false;
 
-              case 28:
+              case 29:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 24]]);
+        }, _callee2, this, [[1, 24]]);
       }));
 
       function save() {
@@ -765,15 +784,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 3:
                 response = _context4.sent;
                 this.medications = response.data;
-                _context4.next = 10;
+                _context4.next = 9;
                 break;
 
               case 7:
                 _context4.prev = 7;
                 _context4.t0 = _context4["catch"](0);
-                console.log(_context4.t0);
 
-              case 10:
+              case 9:
               case "end":
                 return _context4.stop();
             }
@@ -922,6 +940,29 @@ var render = function() {
                             },
                             [
                               _c("v-card", [
+                                _c(
+                                  "div",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: _vm.is_loading,
+                                        expression: "is_loading"
+                                      }
+                                    ]
+                                  },
+                                  [
+                                    _c("v-progress-linear", {
+                                      attrs: {
+                                        indeterminate: "",
+                                        color: "cyan"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
                                 _c(
                                   "form",
                                   {
@@ -1425,18 +1466,21 @@ var render = function() {
                                                                                 value:
                                                                                   _vm
                                                                                     .editedItem
+                                                                                    .items
                                                                                     .quantity,
                                                                                 callback: function(
                                                                                   $$v
                                                                                 ) {
                                                                                   _vm.$set(
-                                                                                    _vm.editedItem,
+                                                                                    _vm
+                                                                                      .editedItem
+                                                                                      .items,
                                                                                     "quantity",
                                                                                     $$v
                                                                                   )
                                                                                 },
                                                                                 expression:
-                                                                                  "editedItem.quantity"
+                                                                                  "editedItem.items.quantity"
                                                                               }
                                                                             }
                                                                           )
@@ -1806,6 +1850,26 @@ var render = function() {
                           _c(
                             "v-card",
                             [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.is_loading,
+                                      expression: "is_loading"
+                                    }
+                                  ]
+                                },
+                                [
+                                  _c("v-progress-linear", {
+                                    attrs: { indeterminate: "", color: "cyan" }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
                               _c("v-card-title", { staticClass: "headline" }, [
                                 _vm._v(
                                   "Are you sure you want to delete\n              " +
@@ -2087,10 +2151,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vuetify/lib/components/VIcon */ "./node_modules/vuetify/lib/components/VIcon/index.js");
 /* harmony import */ var vuetify_lib_components_VImg__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vuetify/lib/components/VImg */ "./node_modules/vuetify/lib/components/VImg/index.js");
 /* harmony import */ var vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vuetify/lib/components/VList */ "./node_modules/vuetify/lib/components/VList/index.js");
-/* harmony import */ var vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vuetify/lib/components/VSelect */ "./node_modules/vuetify/lib/components/VSelect/index.js");
-/* harmony import */ var vuetify_lib_components_VSubheader__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vuetify/lib/components/VSubheader */ "./node_modules/vuetify/lib/components/VSubheader/index.js");
-/* harmony import */ var vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! vuetify/lib/components/VSwitch */ "./node_modules/vuetify/lib/components/VSwitch/index.js");
-/* harmony import */ var vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! vuetify/lib/components/VTextField */ "./node_modules/vuetify/lib/components/VTextField/index.js");
+/* harmony import */ var vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vuetify/lib/components/VProgressLinear */ "./node_modules/vuetify/lib/components/VProgressLinear/index.js");
+/* harmony import */ var vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vuetify/lib/components/VSelect */ "./node_modules/vuetify/lib/components/VSelect/index.js");
+/* harmony import */ var vuetify_lib_components_VSubheader__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! vuetify/lib/components/VSubheader */ "./node_modules/vuetify/lib/components/VSubheader/index.js");
+/* harmony import */ var vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! vuetify/lib/components/VSwitch */ "./node_modules/vuetify/lib/components/VSwitch/index.js");
+/* harmony import */ var vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! vuetify/lib/components/VTextField */ "./node_modules/vuetify/lib/components/VTextField/index.js");
 
 
 
@@ -2137,7 +2202,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_4___default()(component, {VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_5__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VCombobox: vuetify_lib_components_VCombobox__WEBPACK_IMPORTED_MODULE_8__["VCombobox"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDataTable: vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_9__["VDataTable"],VDatePicker: vuetify_lib_components_VDatePicker__WEBPACK_IMPORTED_MODULE_10__["VDatePicker"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_11__["VDialog"],VFileInput: vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_12__["VFileInput"],VIcon: vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_13__["VIcon"],VImg: vuetify_lib_components_VImg__WEBPACK_IMPORTED_MODULE_14__["VImg"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItemTitle"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"],VSelect: vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_16__["VSelect"],VSpacer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VSpacer"],VSubheader: vuetify_lib_components_VSubheader__WEBPACK_IMPORTED_MODULE_17__["VSubheader"],VSwitch: vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_18__["VSwitch"],VTextField: vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_19__["VTextField"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_4___default()(component, {VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_5__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VCombobox: vuetify_lib_components_VCombobox__WEBPACK_IMPORTED_MODULE_8__["VCombobox"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDataTable: vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_9__["VDataTable"],VDatePicker: vuetify_lib_components_VDatePicker__WEBPACK_IMPORTED_MODULE_10__["VDatePicker"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_11__["VDialog"],VFileInput: vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_12__["VFileInput"],VIcon: vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_13__["VIcon"],VImg: vuetify_lib_components_VImg__WEBPACK_IMPORTED_MODULE_14__["VImg"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_15__["VListItemTitle"],VProgressLinear: vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_16__["VProgressLinear"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"],VSelect: vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_17__["VSelect"],VSpacer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VSpacer"],VSubheader: vuetify_lib_components_VSubheader__WEBPACK_IMPORTED_MODULE_18__["VSubheader"],VSwitch: vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_19__["VSwitch"],VTextField: vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_20__["VTextField"]})
 
 
 /* hot reload */

@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoiceMail;
+use App\Mail\MedicationOrder;
 use App\Medication;
 use App\Order;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use LaravelDaily\Invoices\Invoice;
+use LaravelDaily\Invoices\Classes\Buyer;
+use LaravelDaily\Invoices\Classes\InvoiceItem;
 
 class OrderController extends Controller
 {
@@ -58,7 +65,14 @@ class OrderController extends Controller
             foreach ($cartItems as $items) {
                 $order->items()->attach($order, ['medication_id' => $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['item_count']]);
             }
-            return response()->json(['message' => 'Order Placed', 'status_code' => 200], 200);
+
+            $user = User::find($order->user_id);
+            // $medication = Medication::find($)
+            $medicationOrder = Order::with(['items', 'user'])->find($order->id);
+            Mail::to($user->email)->send(new MedicationOrder($medicationOrder));
+
+
+            return response()->json(["order" => $medicationOrder, 'message' => 'Order Placed', 'status_code' => 200], 200);
         } else {
             return response()->json(['message' => 'Some Error Occured'], 500);
         }
@@ -116,6 +130,12 @@ class OrderController extends Controller
                     $medications =   Medication::where('id', $items['pivot']->medication_id)->decrement('units', $items['pivot']->quantity);
                 }
             }
+
+            //send user receipt
+            $user = User::find($order->user_id);
+            // $medication = Medication::find($)
+            $medicationOrder = Order::with(['items', 'user'])->find($order->id);
+            Mail::to($user->email)->send(new MedicationOrder($medicationOrder));
             return response()->json(['message' => 'Order Updated', 'status_code' => 200], 200);
         } else {
             return response()->json(['message' => 'Some Error Occured'], 500);
@@ -148,4 +168,28 @@ class OrderController extends Controller
         $orders = Order::with('items', 'user')->where('user_id', $request->id)->orderByDesc('id')->get();
         return response()->json($orders, 200);
     }
+
+
+    // public function orderInvoice()
+    // {
+    //     $customer = new Buyer([
+    //         'name'          => 'John Doe',
+    //         'custom_fields' => [
+    //             'email' => 'test@example.com',
+    //         ],
+    //     ]);
+
+    //     $item = (new InvoiceItem())->title('Service 1')->pricePerUnit(2);
+
+    //     $invoice = Invoice::make()
+    //         ->buyer($customer)
+    //         ->discountByPercent(10)
+    //         ->taxRate(15)
+    //         ->shipping(1.99)
+    //         ->addItem($item);
+
+    //     return $invoice->stream();
+    // }
+
+
 }

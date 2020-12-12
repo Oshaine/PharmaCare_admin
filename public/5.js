@@ -159,12 +159,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Category",
   data: function data() {
     return {
+      is_loading: false,
       search: "",
       dialog: false,
       dialogDelete: false,
@@ -235,11 +248,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                this.is_loading = true;
+                _context.prev = 1;
+                _context.next = 4;
                 return _services_category_service__WEBPACK_IMPORTED_MODULE_1__["deleteCategory"](this.editedItem.id);
 
-              case 3:
+              case 4:
                 response = _context.sent;
                 this.categories.splice(this.editedIndex, 1);
                 this.flashMessage.success({
@@ -248,27 +262,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   time: 5000,
                   icon: "/assets/icons/checked.svg"
                 });
-                _context.next = 11;
+                _context.next = 12;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](0);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
                   icon: "assets/icons/warning.svg"
                 });
 
-              case 11:
-                this.closeDelete();
-
               case 12:
+                this.closeDelete();
+                this.is_loading = false;
+
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[1, 9]]);
       }));
 
       function deleteItemConfirm() {
@@ -303,22 +318,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
+                this.is_loading = true;
+                _context2.prev = 1;
                 formData = new FormData();
                 formData.append("id", this.editedItem.id);
                 formData.append("name", this.editedItem.name);
                 formData.append("description", this.editedItem.description);
 
                 if (!(this.editedIndex > -1)) {
-                  _context2.next = 15;
+                  _context2.next = 16;
                   break;
                 }
 
                 formData.append("_method", "PUT");
-                _context2.next = 9;
+                _context2.next = 10;
                 return _services_category_service__WEBPACK_IMPORTED_MODULE_1__["updateCategory"](this.editedItem.id, formData);
 
-              case 9:
+              case 10:
                 response = _context2.sent;
                 Object.assign(this.categories[this.editedIndex], this.editedItem);
                 this.flashMessage.success({
@@ -328,14 +344,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   icon: "/assets/icons/checked.svg"
                 });
                 this.close();
-                _context2.next = 21;
+                _context2.next = 23;
                 break;
 
-              case 15:
-                _context2.next = 17;
+              case 16:
+                _context2.next = 18;
                 return _services_category_service__WEBPACK_IMPORTED_MODULE_1__["createCategory"](formData);
 
-              case 17:
+              case 18:
                 _response = _context2.sent;
                 this.categories.push(this.editedItem);
                 this.flashMessage.success({
@@ -345,26 +361,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   icon: "/assets/icons/checked.svg"
                 });
                 this.close();
-
-              case 21:
-                _context2.next = 26;
-                break;
+                this.is_loading = false;
 
               case 23:
-                _context2.prev = 23;
-                _context2.t0 = _context2["catch"](0);
+                _context2.next = 28;
+                break;
+
+              case 25:
+                _context2.prev = 25;
+                _context2.t0 = _context2["catch"](1);
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
                   icon: "assets/icons/warning.svg"
                 });
 
-              case 26:
+              case 28:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[0, 23]]);
+        }, _callee2, this, [[1, 25]]);
       }));
 
       function save() {
@@ -535,6 +552,29 @@ var render = function() {
                             [
                               _vm._v(" "),
                               _c("v-card", [
+                                _c(
+                                  "div",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: _vm.is_loading,
+                                        expression: "is_loading"
+                                      }
+                                    ]
+                                  },
+                                  [
+                                    _c("v-progress-linear", {
+                                      attrs: {
+                                        indeterminate: "",
+                                        color: "cyan"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
                                 _c(
                                   "form",
                                   {
@@ -833,6 +873,29 @@ var render = function() {
                                 "v-card",
                                 [
                                   _c(
+                                    "div",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.is_loading,
+                                          expression: "is_loading"
+                                        }
+                                      ]
+                                    },
+                                    [
+                                      _c("v-progress-linear", {
+                                        attrs: {
+                                          indeterminate: "",
+                                          color: "cyan"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
                                     "v-card-title",
                                     { staticClass: "headline" },
                                     [
@@ -1002,8 +1065,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuetify/lib/components/VDataTable */ "./node_modules/vuetify/lib/components/VDataTable/index.js");
 /* harmony import */ var vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuetify/lib/components/VDialog */ "./node_modules/vuetify/lib/components/VDialog/index.js");
 /* harmony import */ var vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuetify/lib/components/VIcon */ "./node_modules/vuetify/lib/components/VIcon/index.js");
-/* harmony import */ var vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuetify/lib/components/VTextField */ "./node_modules/vuetify/lib/components/VTextField/index.js");
-/* harmony import */ var vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuetify/lib/components/VToolbar */ "./node_modules/vuetify/lib/components/VToolbar/index.js");
+/* harmony import */ var vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuetify/lib/components/VProgressLinear */ "./node_modules/vuetify/lib/components/VProgressLinear/index.js");
+/* harmony import */ var vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuetify/lib/components/VTextField */ "./node_modules/vuetify/lib/components/VTextField/index.js");
+/* harmony import */ var vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuetify/lib/components/VToolbar */ "./node_modules/vuetify/lib/components/VToolbar/index.js");
 
 
 
@@ -1038,7 +1102,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_4__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VContainer"],VDataTable: vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_7__["VDataTable"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_8__["VDialog"],VIcon: vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_9__["VIcon"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VRow"],VSpacer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VSpacer"],VTextField: vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_10__["VTextField"],VToolbar: vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_11__["VToolbar"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_4__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VContainer"],VDataTable: vuetify_lib_components_VDataTable__WEBPACK_IMPORTED_MODULE_7__["VDataTable"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_8__["VDialog"],VIcon: vuetify_lib_components_VIcon__WEBPACK_IMPORTED_MODULE_9__["VIcon"],VProgressLinear: vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_10__["VProgressLinear"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VRow"],VSpacer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VSpacer"],VTextField: vuetify_lib_components_VTextField__WEBPACK_IMPORTED_MODULE_11__["VTextField"],VToolbar: vuetify_lib_components_VToolbar__WEBPACK_IMPORTED_MODULE_12__["VToolbar"]})
 
 
 /* hot reload */

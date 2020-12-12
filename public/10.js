@@ -112,6 +112,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
@@ -120,6 +123,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      is_loading: false,
       user: {
         email: "",
         password: "",
@@ -136,59 +140,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                this.is_loading = true;
+                _context.prev = 1;
+                _context.next = 4;
                 return _services_auth_service__WEBPACK_IMPORTED_MODULE_1__["login"](this.user);
 
-              case 3:
+              case 4:
                 response = _context.sent;
                 this.errors = {}; //rediret user to dashboard
 
                 this.$router.push("/");
-                _context.next = 21;
+                _context.next = 22;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](0);
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](1);
                 _context.t1 = _context.t0.response.status;
-                _context.next = _context.t1 === 401 ? 13 : _context.t1 === 422 ? 15 : _context.t1 === 500 ? 17 : 19;
+                _context.next = _context.t1 === 401 ? 14 : _context.t1 === 422 ? 16 : _context.t1 === 500 ? 18 : 20;
                 break;
 
-              case 13:
+              case 14:
                 this.flashMessage.error({
                   title: "Error",
                   message: this.errors = _context.t0.response.data.message,
                   time: 5000
                 });
-                return _context.abrupt("break", 21);
+                return _context.abrupt("break", 22);
 
-              case 15:
+              case 16:
                 this.errors = _context.t0.response.data.errors;
-                return _context.abrupt("break", 21);
+                return _context.abrupt("break", 22);
 
-              case 17:
+              case 18:
                 this.flashMessage.error({
                   title: "Error",
                   message: _context.t0.response.data.message,
                   time: 5000
                 });
-                return _context.abrupt("break", 21);
+                return _context.abrupt("break", 22);
 
-              case 19:
+              case 20:
                 this.flashMessage.error({
                   title: "Error",
                   message: "There was an eroor, Please try again!",
                   time: 5000
                 });
-                return _context.abrupt("break", 21);
+                return _context.abrupt("break", 22);
 
-              case 21:
+              case 22:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[1, 9]]);
       }));
 
       function login() {
@@ -223,6 +228,26 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "col-xl-10 col-lg-12 col-md-9" }, [
         _c("div", { staticClass: "card o-hidden border-0 shadow-lg my-5" }, [
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.is_loading,
+                  expression: "is_loading"
+                }
+              ]
+            },
+            [
+              _c("v-progress-linear", {
+                attrs: { indeterminate: "", color: "cyan" }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
           _c("div", { staticClass: "card-body p-0" }, [
             _c("div", { staticClass: "row" }, [
               _c("div", {
@@ -481,6 +506,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Login_vue_vue_type_template_id_bb641d1e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Login.vue?vue&type=template&id=bb641d1e& */ "./resources/js/views/authentication/Login.vue?vue&type=template&id=bb641d1e&");
 /* harmony import */ var _Login_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Login.vue?vue&type=script&lang=js& */ "./resources/js/views/authentication/Login.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vuetify-loader/lib/runtime/installComponents.js */ "./node_modules/vuetify-loader/lib/runtime/installComponents.js");
+/* harmony import */ var _node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuetify/lib/components/VProgressLinear */ "./node_modules/vuetify/lib/components/VProgressLinear/index.js");
 
 
 
@@ -498,6 +526,12 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   null
   
 )
+
+/* vuetify-loader */
+
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VProgressLinear: vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_4__["VProgressLinear"]})
+
 
 /* hot reload */
 if (false) { var api; }

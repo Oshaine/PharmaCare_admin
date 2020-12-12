@@ -22,6 +22,12 @@
           <v-row justify="center">
             <v-dialog v-model="dialog" persistent max-width="800px">
               <v-card>
+                <div v-show="is_loading">
+                  <v-progress-linear
+                    indeterminate
+                    color="cyan"
+                  ></v-progress-linear>
+                </div>
                 <v-card-title>
                   <span class="headline">{{ formTitle }}</span>
                 </v-card-title>
@@ -216,6 +222,12 @@
           </v-row>
           <v-dialog v-model="dialogDelete" max-width="800px">
             <v-card>
+              <div v-show="is_loading">
+                <v-progress-linear
+                  indeterminate
+                  color="cyan"
+                ></v-progress-linear>
+              </div>
               <v-card-title class="headline"
                 >Are you sure you want to delete
                 {{ editedItem.order_number }}?</v-card-title
@@ -288,6 +300,7 @@ import Axios from "axios";
 export default {
   name: "OverTheCounterOrders",
   data: () => ({
+    is_loading: false,
     search: "",
     dialog: false,
     dialogDelete: false,
@@ -409,6 +422,7 @@ export default {
     },
 
     deleteItemConfirm: async function () {
+      this.is_loading = true;
       try {
         const response = await orderService.deleteOrders(this.editedItem.id);
         this.orders.splice(this.editedIndex, 1);
@@ -426,6 +440,7 @@ export default {
         });
       }
       this.closeDelete();
+      this.is_loading = false;
     },
 
     close() {
@@ -445,6 +460,8 @@ export default {
     },
 
     save: async function () {
+      this.is_loading = true;
+
       try {
         if (this.editedIndex > -1) {
           var data = {
@@ -480,6 +497,7 @@ export default {
         });
       }
       this.close();
+      this.is_loading = false;
     },
     getOrders: async function () {
       try {

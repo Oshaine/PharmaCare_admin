@@ -61,8 +61,12 @@ Route::resource('medications', 'MedicationController');
 Route::get('featured-medications', 'MedicationController@featuredMedication');
 
 Route::post('medication-categories/{id}', 'MedicationController@medicationWithCategories');
+Route::get('search/{query}', 'MedicationController@search');
+
+// Orders
 Route::resource('orders', 'OrderController');
 Route::post('user-orders', 'OrderController@userOrders');
+Route::get('/invoice', 'OrderController@orderInvoice');
 
 //prescription
 Route::resource('/prescriptions', 'PrescriptionController');

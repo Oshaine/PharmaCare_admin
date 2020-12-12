@@ -26,6 +26,12 @@
           <v-row justify="center">
             <v-dialog v-model="dialog" persistent max-width="800px">
               <v-card>
+                <div v-show="is_loading">
+                  <v-progress-linear
+                    indeterminate
+                    color="cyan"
+                  ></v-progress-linear>
+                </div>
                 <form @submit.prevent="save">
                   <v-card-title>
                     <span class="headline">{{ formTitle }}</span>
@@ -172,7 +178,7 @@
                                 <v-list-item-content>
                                   <v-list-item-title>
                                     <v-text-field
-                                      v-model="editedItem.quantity"
+                                      v-model="editedItem.items.quantity"
                                       type="number"
                                       class="quantity-input"
                                     ></v-text-field>
@@ -272,6 +278,12 @@
           </v-row>
           <v-dialog v-model="dialogDelete" max-width="800px">
             <v-card>
+              <div v-show="is_loading">
+                <v-progress-linear
+                  indeterminate
+                  color="cyan"
+                ></v-progress-linear>
+              </div>
               <v-card-title class="headline"
                 >Are you sure you want to delete
                 {{ editedItem.order_number }}?</v-card-title
@@ -354,6 +366,7 @@ import Axios from "axios";
 export default {
   name: "PrescriptionOrders",
   data: () => ({
+    is_loading: false,
     search: "",
     dialog: false,
     dialogDelete: false,
@@ -385,6 +398,7 @@ export default {
     modal: false,
     prescription_orders: [],
     medications: [],
+    items: [],
     editedItem: {
       id: "",
       order_number: "",
@@ -402,6 +416,8 @@ export default {
           medication_id: "",
           name: "",
           price_per_unit: "",
+          quantity: "",
+
           pivot: {
             medication_id: "",
             price_per_unit: "",
@@ -431,6 +447,7 @@ export default {
           medication_id: "",
           name: "",
           price_per_unit: "",
+
           pivot: {
             medication_id: "",
             price_per_unit: "",
@@ -478,11 +495,8 @@ export default {
 
     medication(e) {
       this.editedItem.items = Object.assign(e);
-      console.log(this.editedItem);
+      //   console.log(this.editedItem);
 
-      this.prescription_orders.map((v) => {
-        // console.log(v);
-      });
       var temp = [];
 
       this.editedItem.items.map((value) => {
@@ -490,9 +504,16 @@ export default {
         if (this.editedItem.quantity == null) {
           this.editedItem.quantity = 1;
         }
+
         temp.push((value.price_per_unit *= this.editedItem.quantity));
+
+        this.items.push({
+          medication_id: value.id,
+          price_per_unit: value.price_per_unit,
+          quantity: this.editedItem.quantity,
+        });
       });
-      console.log(temp);
+      //   console.log(temp);
 
       var sum = temp.reduce((a, b) => a + b);
       this.editedItem.grand_total = sum.toFixed(2);
@@ -517,6 +538,7 @@ export default {
     },
 
     deleteItemConfirm: async function () {
+      this.is_loading = true;
       try {
         const response = await prescriptionService.deletePrescription(
           this.editedItem.id
@@ -536,6 +558,7 @@ export default {
         });
       }
       this.closeDelete();
+      this.is_loading = false;
     },
 
     close() {
@@ -555,6 +578,8 @@ export default {
     },
 
     save: async function () {
+      this.is_loading = true;
+
       try {
         let formData = new FormData();
         formData.append("user_id", this.editedItem.user_id);
@@ -565,17 +590,13 @@ export default {
         formData.append("payment_method", this.editedItem.payment_method);
         formData.append("image", this.editedItem.image);
 
-        this.editedItem.items.map((value) => {
-          formData.append("price_per_unit", value.price_per_unit);
-          formData.append("medication_id", value.id);
-        });
-        formData.append("quantity", this.editedItem.quantity);
+        formData.append("items", JSON.stringify(this.items));
 
+        formData.forEach((value) => {
+          console.log(value);
+        });
         if (this.editedIndex > -1) {
           formData.append("_method", "PUT");
-          formData.forEach((s) => {
-            console.log(s);
-          });
           const response = await prescriptionService.updatePrescription(
             this.editedItem.id,
             formData
@@ -610,6 +631,7 @@ export default {
         });
       }
       this.close();
+      this.is_loading = false;
     },
     loadPrescriptions: async function () {
       try {
@@ -642,9 +664,7 @@ export default {
       try {
         const response = await prescriptionService.getMedications();
         this.medications = response.data;
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     },
   },
 };

@@ -5,6 +5,9 @@
       <h2 class="parmacare-title p-5">PharmaCare</h2>
       <div class="col-xl-10 col-lg-12 col-md-9">
         <div class="card o-hidden border-0 shadow-lg my-5">
+          <div v-show="is_loading">
+            <v-progress-linear indeterminate color="cyan"></v-progress-linear>
+          </div>
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
@@ -101,6 +104,7 @@ export default {
   },
   data() {
     return {
+      is_loading: false,
       user: {
         email: "",
         password: "",
@@ -111,6 +115,7 @@ export default {
   },
   methods: {
     login: async function () {
+      this.is_loading = true;
       try {
         const response = await auth.login(this.user);
         this.errors = {};
