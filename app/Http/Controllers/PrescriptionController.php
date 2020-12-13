@@ -133,15 +133,9 @@ class PrescriptionController extends Controller
             $prescriptions = Prescription::find($prescription->id);
             $temp = $prescriptions->items()->get();
 
-            foreach (json_decode($request->items, true) as $items) {
-                if (count($temp) == 0) {
-                    $prescription->items()->attach($prescription, ['medication_id' => $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['quantity']], true);
-                } else {
-                    foreach ($temp as $p) {
-                        dd($p);
-                        $prescription->items()->updateExistingPivot($p, ['medication_id' =>  $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['quantity']], true);
-                    }
-                }
+            $rquestItem = json_decode($request->items, true);
+            foreach ($rquestItem as $items) {
+                $prescription->items()->attach($prescription, ['medication_id' => $items['medication_id'], 'price_per_unit' => $items['price_per_unit'], 'quantity' => $items['quantity']], true);
             }
 
 
