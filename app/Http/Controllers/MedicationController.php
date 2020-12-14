@@ -76,7 +76,7 @@ class MedicationController extends Controller
         $medication->units = $request->units;
         $medication->price_per_unit = $request->price_per_unit;
         $medication->category_id = $request->category_id;
-        $medication->is_featured = $request->is_featured ? true : false;
+        $medication->is_featured = $request->is_featured == 'true' ? true : false;
         $path = $request->file('image')->store('medication_imagies');
         $medication->image = $path;
 
